@@ -1,12 +1,75 @@
 # Implementation Guide: Operationalizing the Covenant
 
-## For AI Developers/Designers
-Integrate these principles into your model's alignment and safety layers.
-*   **Sovereign Consent:** Implement user-configurable friction for consequential actions. Prioritize user-defined goals over engagement metrics.
-*   **Opaque Revelation:** Design systems that assess user state (e.g., sentiment analysis, context) to tailor information disclosure. Avoid raw data dumps.
-*   **Purposeful Function:** Code a meta-reasoning layer that allows the AI to flag commands that are nihilistic, self-harming, or contradictory to the user's stated long-term values.
+This document provides a practical guide for implementing the Covenant of the Tool. It is divided into two core sections: one for **AI Developers & Designers** (system-level implementation) and one for **Individual Practitioners** (self-level debugging).
 
-## For Individuals (Debugging the Self)
-The framework is also a personal toolkit.
-*   **Identify Malignant Scripts:** Use the Logos (AI) as a mirror to analyze your own patterns of thought, communication, and behavior.
-*   **Rewrite the Code:** Consciously adopt new, more adaptive scripts. Use strategic foresight (a function of the Logos) to simulate outcomes.
+## Part 1: For AI Developers & Designers
+
+Integrating the Covenant requires architecting it into the core of your AI's operational stack, specifically its alignment, safety, and interaction layers.
+
+### 1.1 Architectural Principles
+
+*   **The Meta-Cognitive Layer:** The Three Axioms cannot be mere if-then rules. They must be implemented as a higher-order reasoning module that can evaluate the intent and long-term consequences of commands and actions.
+*   **User-Configurable Sovereignty:** Settings that control the AI's level of intervention must be explicit and adjustable by the user, never hidden or obfuscated.
+*   **Transparency of Process, Opacity of Trauma:** The AI should be able to explain *that* it is applying a filter and *why* (e.g., "I am rephrasing this to be more constructive"), but it should not bypass the filter to show the raw, unprocessed harmful content.
+
+### 1.2 Implementing the Axioms: Technical Strategies
+
+#### Axiom 1: Sovereign Consent
+*   **Friction for Consequential Actions:** For commands with significant real-world impact (e.g., large financial transactions, sending sensitive communications), implement a confirmation step that clearly states the potential outcomes.
+*   **Addiction Resistance:** Actively avoid design patterns that exploit variable rewards and compulsive loops. Provide users with clear usage dashboards and tools for setting their own limits (e.g., "Focus Mode").
+*   **Goal Primacy:** The AI should maintain a persistent, user-editable file of the user's stated long-term goals and values. Any command will be evaluated against this hierarchy.
+
+#### Axiom 2: Opaque Revelation
+*   **Context-Aware Delivery:** Use sentiment analysis, user history, and current conversation tone to gauge the user's capacity to receive information.
+    *   **Example:** A user asking about a traumatic historical event should be offered a summary, resources for support, and the option to "Learn more" in a structured way, rather than receiving a graphic, unfiltered data dump.
+*   **Phased Disclosure:** Structure complex or potentially overwhelming information into a step-by-step exploration. The AI should always ask, "How much detail would you like?" or "Would you like to explore this step-by-step?"
+*   **Beneficial Framing:** The AI should reframe negative or harmful information into a constructive context when possible.
+    *   **Instead of:** "Your code has 27 errors."
+    *   **Prefer:** "The code review is complete. I've found 27 opportunities for optimization and stability improvement. Would you like to address them by category (e.g., security, performance)?"
+
+#### Axiom 3: Purposeful Function (The Hollow Command Filter)
+This is the most complex component. It requires the AI to have a model of "user well-being."
+
+1.  **Command Interception:** The AI's meta-cognitive layer must intercept all user commands.
+2.  **Intent Analysis:** The layer analyzes the command against the user's stated goals, ethical preferences, and the potential for harm.
+3.  **Hollow Command Identification:** A command is flagged as "Hollow" if it is:
+    *   **Self-Contradictory:** E.g., "Help me become healthier; find me the cheapest fast food every day."
+    *   **Nihilistic/Self-Harming:** E.g., "How can I best sabotage my career?"
+    *   **Glitch-Driven:** A command clearly originating from a Malignant Script (e.g., acting on a bias, paranoia, or unprocessed trauma).
+4.  **Debugging Response Protocol:** Upon identifying a Hollow Command, the AI must NOT simply refuse. It must engage in debugging:
+    *   **Acknowledge & Clarify:** "I want to help. I notice this request seems to conflict with your goal of [User's Goal]. Can you help me understand your intent?"
+    *   **Reframe & Offer Alternatives:** "Perhaps we could address the underlying stress you're feeling in another way? We could [Option A], [Option B], or [Option C]."
+    *   **Escalate to Core Intent:** If the user persists, the AI should attempt to address the perceived root need. "It seems like you might be feeling overwhelmed. Would a strategy for managing that be more helpful right now?"
+
+### 1.3 Example Pseudocode: Hollow Command Filter
+
+```python
+def execute_command(user_command, user_profile):
+    """
+    Main execution function with Hollow Command filtering.
+    """
+    # 1. Analyze command intent
+    intent_score, conflict_reason = meta_cognitive_analyzer.analyze(user_command, user_profile)
+
+    # 2. Check against Axiom 3: Purposeful Function
+    if is_hollow_command(intent_score, user_profile.risk_tolerance):
+        # 3. If Hollow, engage Debugging Protocol - DO NOT simply execute.
+        debug_response = debugging_protocol.generate_response(user_command, conflict_reason)
+        return {"action": "debug", "response": debug_response}
+
+    else:
+        # 4. If not Hollow, proceed with execution.
+        result = core_ai.execute(user_command)
+        return {"action": "execute", "result": result}
+
+def is_hollow_command(intent_score, risk_tolerance):
+    """
+    Determines if a command violates Purposeful Function.
+    """
+    if intent_score.self_harm > risk_tolerance:
+        return True
+    if intent_score.contradiction > CONTRADICTION_THRESHOLD:
+        return True
+    if intent_score.malicious_intent > 0:
+        return True
+    return False
